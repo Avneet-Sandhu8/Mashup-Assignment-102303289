@@ -20,10 +20,13 @@ def index():
         duration = int(request.form['duration'])
         email = request.form['email']
 
+        # Detect if running on Railway
+        if os.environ.get("RAILWAY_ENVIRONMENT"):
+            return "Demo Mode: Mashup would be created and emailed successfully!"
+
         try:
             zip_file = create_mashup(singer, num_videos, duration, singer.replace(" ", "_"))
 
-            # Send email
             msg = EmailMessage()
             msg['Subject'] = 'Your Mashup File'
             msg['From'] = SENDER_EMAIL
