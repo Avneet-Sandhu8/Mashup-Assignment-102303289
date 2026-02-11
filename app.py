@@ -6,9 +6,9 @@ import os
 
 app = Flask(__name__)
 
-# 🔹 CHANGE THIS
-SENDER_EMAIL = "avneetsandhu719@gmail.com"
-APP_PASSWORD = "cwqtfwmidxioabuo"
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
+APP_PASSWORD = os.environ.get("APP_PASSWORD")
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
