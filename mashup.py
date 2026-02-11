@@ -1,10 +1,13 @@
 import os
+import shutil
+import zipfile
 from yt_dlp import YoutubeDL
 from pydub import AudioSegment
-import zipfile
+
 
 def create_mashup(singer, num_videos, duration, output_name):
 
+    # 🔒 Validation
     if num_videos <= 10:
         raise ValueError("Number of videos must be greater than 10")
 
@@ -13,41 +16,48 @@ def create_mashup(singer, num_videos, duration, output_name):
 
     download_folder = "downloads"
 
-    # Create downloads folder if not exists
+    # 📁 Create downloads folder
     if not os.path.exists(download_folder):
         os.makedirs(download_folder)
 
-    # 🔥 CLEAR OLD DOWNLOADS
+    # 🧹 Clear old downloads
     for file in os.listdir(download_folder):
         file_path = os.path.join(download_folder, file)
         if os.path.isfile(file_path):
             os.remove(file_path)
 
-    # 🔥 REMOVE OLD OUTPUT FILES (if exist)
-    if os.path.exists(f"{output_name}.mp3"):
-        os.remove(f"{output_name}.mp3")
+    # 🧹 Remove old output files
+    mp3_filename = f"{output_name}.mp3"
+    zip_filename = f"{output_name}.zip"
 
-    if os.path.exists(f"{output_name}.zip"):
-        os.remove(f"{output_name}.zip")
+    if os.path.exists(mp3_filename):
+        os.remove(mp3_filename)
 
-    # Download videos
+    if os.path.exists(zip_filename):
+        os.remove(zip_filename)
+
+    # 🎵 Download audio from YouTube
     ydl_opts = {
-    'format': 'bestaudio/best',
-    'outtmpl': f'{download_folder}/%(title)s.%(ext)s',
-    'quiet': True,
-    'ignoreerrors': True
-}
-
+        'format': 'bestaudio/best',
+        'outtmpl': f'{download_folder}/%(title)s.%(ext)s',
+        'quiet': True,
+        'ignoreerrors': True
+    }
 
     search_query = f"ytsearch{num_videos}:{singer} songs"
 
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([search_query])
 
-    # Merge audio
+    # 🎧 Merge & trim audio
     final_audio = AudioSegment.empty()
 
-    for file in os.listdir(download_folder):
+    files = os.listdir(download_folder)
+
+    if not files:
+        raise Exception("No audio files downloaded. Try another singer.")
+
+    for file in files:
         file_path = os.path.join(download_folder, file)
 
         try:
@@ -58,13 +68,19 @@ def create_mashup(singer, num_videos, duration, output_name):
             print(f"Skipping file {file}: {e}")
             continue
 
-    output_path = f"{output_name}.mp3"
-    final_audio.export(output_path, format="mp3")
+    if len(final_audio) == 0:
+        raise Exception("Failed to process audio files.")
 
-    # Create ZIP file
-    zip_filename = f"{output_name}.zip"
+    # 💾 Export final MP3
+    final_audio.export(mp3_filename, format="mp3")
 
+    # 📦 Create ZIP file
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
-        zipf.write(output_path)
+        zipf.write(mp3_filename)
 
+    # 🧹 Clean up
+    shutil.rmtree(download_folder)
+    os.remove(mp3_filename)
+
+    # ✅ RETURN ZIP FILE NAME
     return zip_filename

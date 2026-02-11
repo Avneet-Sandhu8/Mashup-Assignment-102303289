@@ -9,6 +9,9 @@ app = Flask(__name__)
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 APP_PASSWORD = os.environ.get("APP_PASSWORD")
 
+if not SENDER_EMAIL or not APP_PASSWORD:
+    raise ValueError("Email credentials not configured in Railway variables.")
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -43,9 +46,15 @@ def index():
                 smtp.login(SENDER_EMAIL, APP_PASSWORD)
                 smtp.send_message(msg)
 
+            # Clean up after sending
+            if os.path.exists(zip_file):
+                os.remove(zip_file)
+
             return "Mashup created and emailed successfully!"
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             return f"Error: {str(e)}"
 
     return render_template('index.html')
