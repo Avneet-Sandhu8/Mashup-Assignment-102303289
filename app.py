@@ -9,6 +9,8 @@ app = Flask(__name__)
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 APP_PASSWORD = os.environ.get("APP_PASSWORD")
 
+if not SENDER_EMAIL or not APP_PASSWORD:
+    raise ValueError("Email environment variables not set properly.")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
