@@ -1,17 +1,22 @@
 import sys
 import os
+import shutil
 from yt_dlp import YoutubeDL
 from pydub import AudioSegment
+import zipfile
+
 
 def download_videos(singer, num_videos):
+    if os.path.exists("downloads"):
+        shutil.rmtree("downloads")
+
+    os.makedirs("downloads")
+
     ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': 'downloads/%(title)s.%(ext)s',
         'quiet': True
     }
-
-    if not os.path.exists("downloads"):
-        os.makedirs("downloads")
 
     search_query = f"ytsearch{num_videos}:{singer} songs"
 
@@ -27,7 +32,7 @@ def convert_and_trim(duration):
 
         try:
             audio = AudioSegment.from_file(file_path)
-            trimmed_audio = audio[:duration * 1000]  # milliseconds
+            trimmed_audio = audio[:duration * 1000]
             final_audio += trimmed_audio
         except Exception as e:
             print(f"Error processing {file}: {e}")
@@ -37,13 +42,14 @@ def convert_and_trim(duration):
 
 def main():
     if len(sys.argv) != 5:
-        print("Usage: python 102303289.py <SingerName> <NumberOfVideos> <AudioDuration> <OutputFileName>")
+        print("Usage:")
+        print("python 102303289.py <SingerName> <NumberOfVideos> <Duration> <OutputName>")
         sys.exit(1)
 
     singer = sys.argv[1]
     num_videos = int(sys.argv[2])
     duration = int(sys.argv[3])
-    output_file = sys.argv[4]
+    output_name = sys.argv[4]
 
     if num_videos <= 10:
         print("Number of videos must be greater than 10")
@@ -59,11 +65,23 @@ def main():
     print("Processing audio...")
     final_audio = convert_and_trim(duration)
 
-    print("Exporting final mashup...")
-    final_audio.export(output_file, format="mp3")
+    mp3_file = f"{output_name}.mp3"
+    zip_file = f"{output_name}.zip"
 
-    print("Mashup created successfully!")
+    print("Exporting MP3...")
+    final_audio.export(mp3_file, format="mp3")
+
+    print("Creating ZIP file...")
+    with zipfile.ZipFile(zip_file, 'w') as zipf:
+        zipf.write(mp3_file)
+
+    print("Cleaning temporary files...")
+    shutil.rmtree("downloads")
+    os.remove(mp3_file)
+
+    print(f"✅ Mashup created successfully: {zip_file}")
 
 
 if __name__ == "__main__":
     main()
+
