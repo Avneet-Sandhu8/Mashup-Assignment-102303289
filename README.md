@@ -4,20 +4,6 @@ A full-stack Python application that automatically creates audio mashups by down
 
 ---
 
-## Screenshots
-
-
-
-## Live Demo
-
-**Try it now:** [https://your-railway-app.railway.app](https://your-railway-app.railway.app)
-
-> **Note:** Replace the URL above with your actual Railway deployment link
-
-**Video Demo:** [Watch on YouTube](https://youtube.com/your-video-link)
-
----
-
 ## Features
 
 - **YouTube Integration** - Automatically searches and downloads songs
