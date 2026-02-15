@@ -162,7 +162,6 @@ Mashup-Assignment-102303289/
 ├── .gitignore             
 └── README.md         
 ```
-
 ---
 
 ## Technologies Used
@@ -177,7 +176,6 @@ Mashup-Assignment-102303289/
 ### Email & Deployment
 - **smtplib** - Email sending (Gmail SMTP)
 - **Railway** - Cloud deployment platform
-- **Gunicorn** - Production WSGI server
 
 ### Frontend
 - **HTML5** - Structure
@@ -200,17 +198,6 @@ Mashup-Assignment-102303289/
 ---
 
 ---
-
-## Performance Metrics
-
-| Metric | Value |
-|--------|-------|
-| Average download time (per video) | ~10-15 seconds |
-| Processing time (10 videos) | ~2-3 minutes |
-| Output file size | ~5-10 MB |
-| Email delivery time | ~5-10 seconds |
-
----
-**Project Link:** [https://github.com/yourusername/Mashup-Assignment-102303289](https://github.com/yourusername/Mashup-Assignment-102303289)
+**Project Link:**([https://github.com/yourusername/Mashup-Assignment-102303289](https://github.com/Avneet-Sandhu8/Mashup-Assignment-102303289/blob/main/README.md))
 
 ---
