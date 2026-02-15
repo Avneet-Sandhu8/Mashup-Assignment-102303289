@@ -51,18 +51,8 @@ python 102303289.py "Arijit Singh" 15 30 arijit_mashup.mp3
 **Parameters:**
 - `SingerName` - Name of the singer/artist
 - `NumberOfVideos` - Number of videos to download (must be > 10)
-- `AudioDuration` - Duration in seconds to trim each song (must be > 20)
+- `AudioDuration` - Duration in seconds to trim each song (must be > 30)
 - `OutputFileName` - Name of the output mashup file
-
-### Sample Output
-
-```
-Downloading videos...
-Processing audio...
-Exporting final mashup...
-Mashup created successfully!
-✓ Output saved to: arijit_mashup.mp3
-```
 
 ---
 
